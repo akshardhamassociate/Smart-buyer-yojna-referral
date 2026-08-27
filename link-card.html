@@ -134,6 +134,7 @@
 <script>
 (function(){
   var BASE_URL = "https://akshardhamassociate.github.io/Smart-buyer-yojna-referral/";
+  var SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxkGdzKizGhJ3dlGfjV_atRY4EZc__wSrUmHKTvD9KR4C4Zym6W5sJVb2duMOJJWOs7Xg/exec";
 
   var formBox = document.getElementById('formBox');
   var resultCard = document.getElementById('resultCard');
@@ -141,10 +142,7 @@
   var genBtn = document.getElementById('genBtn');
 
   function slugify(name){
-    return name.toLowerCase().trim()
-      .replace(/[^a-z0-9\u0900-\u097F\s]/g, '')
-      .replace(/\s+/g, '')
-      .slice(0, 14);
+    return name.trim().toLowerCase().replace(/[^a-z0-9\u0900-\u097F]/g, '');
   }
 
   function showErr(msg){
@@ -152,9 +150,29 @@
     errBox.style.display = 'block';
   }
 
+  function logCardGenerated(name, phone, link){
+    try{
+      var payload = {
+        type: 'link_card_generated',
+        name: name,
+        mobile: phone,
+        link: link,
+        timestamp: new Date().toISOString()
+      };
+      fetch(SHEET_WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type': 'text/plain'},
+        body: JSON.stringify(payload)
+      }).catch(function(){});
+    }catch(e){}
+  }
+
   function buildCard(name, phone){
     var code = slugify(name) + phone.slice(-4);
     var link = BASE_URL + '?ref=' + encodeURIComponent(code) + '&n=' + encodeURIComponent(name);
+
+    logCardGenerated(name, phone, link);
 
     document.getElementById('s_name').textContent = name;
     var linkEl = document.getElementById('s_link');
