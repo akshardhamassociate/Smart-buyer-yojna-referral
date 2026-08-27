@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>मेरा Referral Link Card | Akshardham Associates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Hind:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Noto+Serif+Devanagari:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dark:#4A3222; --dark2:#5C4028; --dark3:#6B4A2E;
+    --gold:#F0A93C; --gold-light:#FFD07A; --orange:#EE7B33; --orange-dark:#D4571F;
+    --cream:#FFFBF2; --cream2:#FDF2DF;
+    --text-muted:#8a7568; --text-muted2:#8a6f5c;
+    --green:#22A06B; --green-light:#4FCB93;
+    --blue:#2F7DB8; --blue-light:#E4F0F9;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--cream); font-family:'Outfit','Hind',sans-serif; color:#1c2340; min-height:100vh;
+    display:flex; flex-direction:column; align-items:center;}
+  ::selection{background:var(--gold); color:var(--dark);}
+  a{color:var(--gold); text-decoration:none;}
+  .hindi{font-family:'Hind',sans-serif;}
+  .serif{font-family:'Noto Serif Devanagari','Playfair Display',serif;}
+  img{max-width:100%;}
+
+  .topbar{width:100%; background:linear-gradient(160deg, var(--dark) 0%, var(--dark2) 55%, var(--dark3) 100%);
+    padding:22px 20px; text-align:center;}
+  .brand-badge{background:#fff; display:inline-block; padding:8px 16px; border-radius:10px; box-shadow:0 10px 22px rgba(0,0,0,.3);}
+  .brand-badge .name{font-weight:800; font-size:16px; color:var(--dark); letter-spacing:.3px;}
+
+  .page{width:100%; max-width:440px; padding:28px 20px 60px;}
+
+  .heading{text-align:center; margin-bottom:26px;}
+  .heading h1{font-family:'Noto Serif Devanagari','Playfair Display',serif; font-size:24px; font-weight:700;
+    color:var(--dark); margin:0 0 8px;}
+  .heading p{font-family:'Hind',sans-serif; font-size:14.5px; color:var(--text-muted); margin:0; line-height:1.5;}
+
+  .card-box{background:#fff; border-radius:18px; padding:26px 22px; box-shadow:0 10px 30px rgba(74,50,34,.1); border:1px solid rgba(74,50,34,.06);}
+
+  label{display:block; font-family:'Hind',sans-serif; font-size:14.5px; font-weight:600; color:var(--dark); margin:0 0 7px;}
+  .field{margin-bottom:18px;}
+  input[type=text], input[type=tel]{width:100%; padding:13px 14px; border-radius:10px; border:1.5px solid #E7DBC9;
+    font-size:15.5px; font-family:'Hind',sans-serif; color:#1c2340; background:var(--cream2);}
+  input:focus{outline:none; border-color:var(--gold);}
+
+  .err{display:none; background:#FCE9E4; color:#B3401F; font-family:'Hind',sans-serif; font-size:13.5px;
+    padding:10px 12px; border-radius:8px; margin-bottom:14px;}
+
+  .btn-primary{width:100%; background:linear-gradient(160deg,#F7C873,#E8622C 70%,#C94A1E); color:var(--dark);
+    padding:15px; border-radius:10px; font-weight:700; font-size:16px; border:none; cursor:pointer;
+    box-shadow:0 10px 24px rgba(232,98,44,.35); font-family:'Hind',sans-serif;}
+  .btn-primary:active{transform:scale(.98);}
+
+  /* ---------- Result card (this is what gets screenshotted) ---------- */
+  #resultCard{display:none;}
+  .share-card{background:linear-gradient(160deg, var(--dark) 0%, var(--dark2) 55%, var(--dark3) 100%);
+    border-radius:20px; padding:32px 26px; text-align:center; color:#fff; position:relative; overflow:hidden;
+    box-shadow:0 20px 45px rgba(74,50,34,.35);}
+  .share-card::before{content:""; position:absolute; inset:0;
+    background-image:linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size:34px 34px; pointer-events:none;}
+  .share-card > *{position:relative;}
+  .share-badge{background:#fff; display:inline-block; padding:6px 14px; border-radius:8px; margin-bottom:20px;}
+  .share-badge .name{font-weight:800; font-size:13px; color:var(--dark);}
+  .share-person{font-family:'Noto Serif Devanagari','Playfair Display',serif; font-size:22px; font-weight:700; margin:0 0 4px;
+    background:linear-gradient(100deg,#fff 20%,#F7C873 55%,#fff 90%); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .share-tag{font-family:'Hind',sans-serif; font-size:13px; color:#f0d9c4; margin:0 0 22px;}
+  .share-cta{font-family:'Hind',sans-serif; font-size:15.5px; color:#fff; font-weight:600; margin:0 0 14px; line-height:1.6;}
+  .link-pill{background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.25); border-radius:12px;
+    padding:14px 12px; word-break:break-all; font-size:13px; font-family:'Hind',sans-serif; color:var(--gold-light);
+    margin-bottom:6px; display:block; text-decoration:underline;}
+  .share-foot{font-family:'Hind',sans-serif; font-size:11.5px; color:#c9ab8f; margin-top:18px;}
+
+  .action-row{display:flex; gap:10px; margin-top:20px;}
+  .btn-ghost{flex:1; background:var(--cream2); border:1.5px solid #E7DBC9; color:var(--dark); padding:13px 10px;
+    border-radius:10px; font-weight:600; font-size:14px; font-family:'Hind',sans-serif; text-align:center; cursor:pointer;}
+  .btn-ghost.wa{background:#22A06B; border-color:#22A06B; color:#fff;}
+  .btn-ghost:active{transform:scale(.97);}
+
+  .hint{font-family:'Hind',sans-serif; font-size:13px; color:var(--text-muted); text-align:center; margin-top:16px; line-height:1.6;}
+  .again{display:block; text-align:center; margin-top:18px; font-family:'Hind',sans-serif; font-size:14px; color:var(--orange-dark); font-weight:600; cursor:pointer;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand-badge"><span class="name">Akshardham Associates</span></div>
+</div>
+
+<div class="page">
+
+  <div class="heading">
+    <h1 class="serif">मेरा Referral Link Card</h1>
+    <p class="hindi">नाम और मोबाइल डालें — आपका personal link card बन जाएगा। इसे save कर लें और किसी भी योजना के वीडियो के साथ WhatsApp Status पर लगाएं।</p>
+  </div>
+
+  <div class="card-box" id="formBox">
+    <div class="err" id="errBox"></div>
+    <div class="field">
+      <label class="hindi">आपका नाम</label>
+      <input type="text" id="f_name" placeholder="जैसे: Rakesh Sharma">
+    </div>
+    <div class="field">
+      <label class="hindi">मोबाइल नंबर</label>
+      <input type="tel" id="f_phone" placeholder="10 अंकों का नंबर" maxlength="10">
+    </div>
+    <button class="btn-primary hindi" id="genBtn">मेरा Link Card बनाएं</button>
+    <p class="hint">पहले से बना चुके हैं? वही नाम और नंबर डालें — बिल्कुल वही लिंक दोबारा मिल जाएगा।</p>
+  </div>
+
+  <div id="resultCard">
+    <div class="share-card" id="shareCard">
+      <div class="share-badge"><span class="name">Akshardham Associates</span></div>
+      <div class="share-person serif" id="s_name"></div>
+      <div class="share-tag hindi">Smart Buyer Network Partner</div>
+      <div class="share-cta hindi">अपनी डिटेल्स शेयर करने के लिए नीचे दिए गए लिंक पर क्लिक करें</div>
+      <a class="link-pill" id="s_link" href="#" target="_blank" rel="noopener"></a>
+      <div class="share-foot hindi">👆 लिंक पर टैप करके पेज खुद खोलकर देखें, या नीचे से कॉपी/शेयर करें</div>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-ghost hindi" id="copyBtn">🔗 Link Copy करें</button>
+      <button class="btn-ghost wa hindi" id="waBtn">📲 WhatsApp पर भेजें</button>
+    </div>
+
+    <p class="hint">Card को screenshot लेकर save कर लें — जब भी कोई नया योजना वीडियो स्टेटस पर डालें, उसके साथ यह screenshot भी लगा दें।</p>
+    <span class="again" id="againBtn">दूसरा नाम/नंबर डालें</span>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var BASE_URL = "https://akshardhamassociate.github.io/Smart-buyer-yojna-referral/";
+
+  var formBox = document.getElementById('formBox');
+  var resultCard = document.getElementById('resultCard');
+  var errBox = document.getElementById('errBox');
+  var genBtn = document.getElementById('genBtn');
+
+  function slugify(name){
+    return name.toLowerCase().trim()
+      .replace(/[^a-z0-9\u0900-\u097F\s]/g, '')
+      .replace(/\s+/g, '')
+      .slice(0, 14);
+  }
+
+  function showErr(msg){
+    errBox.textContent = msg;
+    errBox.style.display = 'block';
+  }
+
+  function buildCard(name, phone){
+    var code = slugify(name) + phone.slice(-4);
+    var link = BASE_URL + '?ref=' + encodeURIComponent(code) + '&n=' + encodeURIComponent(name);
+
+    document.getElementById('s_name').textContent = name;
+    var linkEl = document.getElementById('s_link');
+    linkEl.textContent = link;
+    linkEl.href = link;
+
+    formBox.style.display = 'none';
+    resultCard.style.display = 'block';
+    resultCard.scrollIntoView({behavior:'smooth', block:'start'});
+
+    document.getElementById('copyBtn').onclick = function(){
+      navigator.clipboard.writeText(link).then(function(){
+        var btn = document.getElementById('copyBtn');
+        btn.textContent = 'Copied ✓';
+        setTimeout(function(){ btn.textContent = '🔗 Link Copy करें'; }, 2000);
+      }).catch(function(){});
+    };
+
+    document.getElementById('waBtn').onclick = function(){
+      var text = encodeURIComponent('🏡 ' + name + ' ने आपको अक्षरधाम प्रॉपर्टी से जुड़ने के लिए आमंत्रित किया है!\n\n👉 अपनी डिटेल्स शेयर करने के लिए इस लिंक पर क्लिक करें:\n' + link);
+      window.open('https://wa.me/?text=' + text, '_blank');
+    };
+  }
+
+  genBtn.addEventListener('click', function(){
+    errBox.style.display = 'none';
+    var name = document.getElementById('f_name').value.trim();
+    var phone = document.getElementById('f_phone').value.trim();
+    if (!name){ return showErr('कृपया अपना नाम भरें।'); }
+    if (!/^\d{10}$/.test(phone)){ return showErr('कृपया सही 10 अंकों का मोबाइल नंबर भरें।'); }
+    buildCard(name, phone);
+  });
+
+  document.getElementById('againBtn').addEventListener('click', function(){
+    resultCard.style.display = 'none';
+    formBox.style.display = 'block';
+    document.getElementById('f_name').value = '';
+    document.getElementById('f_phone').value = '';
+    formBox.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+})();
+</script>
+</body>
+</html>
