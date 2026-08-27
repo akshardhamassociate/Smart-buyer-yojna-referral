@@ -17,32 +17,89 @@
     --blue:#2F7DB8; --blue-light:#E4F0F9;
   }
   *{box-sizing:border-box;}
-  body{margin:0; background:var(--cream); font-family:'Outfit','Hind',sans-serif; color:#1c2340; min-height:100vh;
-    display:flex; flex-direction:column; align-items:center;}
+  html{background:var(--cream);}
+  body{margin:0; font-family:'Outfit','Hind',sans-serif; color:#1c2340; min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; position:relative; overflow-x:hidden;
+    background:
+      linear-gradient(180deg, rgba(30,20,12,.55) 0%, rgba(74,50,34,.75) 30%, var(--cream) 62%, var(--cream) 100%),
+      url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=65&auto=format&fit=crop') top center/cover no-repeat fixed,
+      var(--cream);}
+  body::before{content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.35;
+    background-image:radial-gradient(rgba(74,50,34,.09) 1.4px, transparent 1.4px);
+    background-size:26px 26px;}
   ::selection{background:var(--gold); color:var(--dark);}
   a{color:var(--gold); text-decoration:none;}
   .hindi{font-family:'Hind',sans-serif;}
   .serif{font-family:'Noto Serif Devanagari','Playfair Display',serif;}
   img{max-width:100%;}
 
-  .topbar{width:100%; background:linear-gradient(160deg, var(--dark) 0%, var(--dark2) 55%, var(--dark3) 100%);
-    padding:22px 20px; text-align:center;}
-  .brand-badge{background:#fff; display:inline-block; padding:8px 16px; border-radius:10px; box-shadow:0 10px 22px rgba(0,0,0,.3);}
+  .topbar{width:100%; position:relative; z-index:1; text-align:center; overflow:hidden;
+    min-height:200px; display:flex; flex-direction:column; align-items:center; justify-content:space-between;
+    padding:22px 20px 26px; background:transparent;}
+  .topbar-hero-text{max-width:320px; margin-top:10px;}
+  .topbar-hero-text h2{font-family:'Noto Serif Devanagari','Playfair Display',serif; color:#fff; font-size:19px;
+    font-weight:700; margin:0 0 6px; line-height:1.4; text-shadow:0 2px 10px rgba(0,0,0,.4);}
+  .topbar-hero-text p{font-family:'Hind',sans-serif; color:#f0d9c4; font-size:12.5px; margin:0; opacity:.95;}
+  .brand-badge{position:relative; background:#fff; display:inline-block; padding:8px 16px; border-radius:10px; box-shadow:0 10px 22px rgba(0,0,0,.3);}
   .brand-badge .name{font-weight:800; font-size:16px; color:var(--dark); letter-spacing:.3px;}
 
-  .page{width:100%; max-width:440px; padding:28px 20px 60px;}
+  /* chain / network illustration in hero */
+  .chain-wrap{position:relative; margin-top:26px; display:flex; align-items:center; justify-content:center; gap:0;}
+  .node{width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 18px rgba(0,0,0,.25); position:relative; z-index:1;}
+  .node.big{width:58px; height:58px; background:linear-gradient(160deg,#F7C873,#E8622C 70%,#C94A1E);}
+  .node.small{width:40px; height:40px; background:rgba(255,255,255,.14); border:1.5px solid rgba(255,255,255,.35);}
+  .node svg{width:50%; height:50%;}
+  .dash-line{width:38px; height:2px; background-image:linear-gradient(90deg, rgba(255,255,255,.55) 0 6px, transparent 6px 12px); background-size:12px 2px;}
 
-  .heading{text-align:center; margin-bottom:26px;}
-  .heading h1{font-family:'Noto Serif Devanagari','Playfair Display',serif; font-size:24px; font-weight:700;
+  /* WhatsApp status phone mockup — the relatable "real scene" illustration */
+  .phone-mockup{position:relative; margin:26px auto 6px; width:172px; height:222px;
+    background:linear-gradient(155deg,#2b2b2b,#111); border-radius:26px; padding:8px;
+    box-shadow:0 20px 40px rgba(0,0,0,.4), inset 0 0 0 2px rgba(255,255,255,.06);}
+  .phone-notch{position:absolute; top:8px; left:50%; transform:translateX(-50%); width:52px; height:14px;
+    background:#111; border-radius:0 0 10px 10px; z-index:3;}
+  .phone-screen{width:100%; height:100%; border-radius:19px; overflow:hidden; position:relative;
+    background:linear-gradient(180deg,#0b141a,#1a2530 60%, #0b141a);}
+  .status-ring{position:absolute; top:12px; left:12px; width:30px; height:30px; border-radius:50%;
+    background:conic-gradient(#25D366 0turn .78turn, rgba(255,255,255,.25) .78turn 1turn); padding:2.5px; z-index:2;}
+  .status-ring-inner{width:100%; height:100%; border-radius:50%; background:#4A3222; display:flex; align-items:center; justify-content:center;}
+  .status-ring-inner svg{width:60%; height:60%;}
+  .status-label{position:absolute; top:18px; left:48px; z-index:2;}
+  .status-label .l1{width:58px; height:6px; border-radius:3px; background:rgba(255,255,255,.75); margin-bottom:5px;}
+  .status-label .l2{width:38px; height:5px; border-radius:3px; background:rgba(255,255,255,.35);}
+  .status-video{position:absolute; top:52px; left:10px; right:10px; height:98px; border-radius:12px; overflow:hidden;
+    background:linear-gradient(155deg,#5C4028,#4A3222 60%,#3a2a1c);}
+  .status-video::before{content:""; position:absolute; inset:0;
+    background-image:linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size:14px 14px;}
+  .play-btn{position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:34px; height:34px; border-radius:50%;
+    background:rgba(255,255,255,.92); display:flex; align-items:center; justify-content:center; z-index:1;}
+  .play-btn svg{width:14px; height:14px; margin-left:2px;}
+  .status-house{position:absolute; bottom:8px; left:10px; opacity:.85;}
+  .status-house svg{width:22px; height:22px;}
+  .status-linkcard{position:absolute; left:10px; right:10px; bottom:14px; padding:8px 10px; border-radius:9px;
+    background:rgba(255,255,255,.94); display:flex; align-items:center; gap:7px; box-shadow:0 6px 14px rgba(0,0,0,.35);}
+  .status-linkcard svg{width:15px; height:15px; flex:none;}
+  .status-linkcard .lc-l1{width:64px; height:5px; border-radius:3px; background:#4A3222; margin-bottom:4px;}
+  .status-linkcard .lc-l2{width:44px; height:4px; border-radius:3px; background:#c9ab8f;}
+  .mockup-caption{text-align:center; font-family:'Hind',sans-serif; font-size:12px; color:#f0d9c4; margin-top:2px; opacity:.85;}
+
+  .page{width:100%; max-width:460px; padding:0 20px 60px; margin-top:-26px; position:relative; z-index:1;}
+
+  .heading{text-align:center; margin-bottom:22px; background:#fff; border-radius:18px; padding:22px 20px 20px;
+    box-shadow:0 14px 34px rgba(74,50,34,.14); border:1px solid rgba(74,50,34,.06);}
+  .heading h1{font-family:'Noto Serif Devanagari','Playfair Display',serif; font-size:23px; font-weight:700;
     color:var(--dark); margin:0 0 8px;}
-  .heading p{font-family:'Hind',sans-serif; font-size:14.5px; color:var(--text-muted); margin:0; line-height:1.5;}
+  .heading p{font-family:'Hind',sans-serif; font-size:14px; color:var(--text-muted); margin:0; line-height:1.55;}
 
   .card-box{background:#fff; border-radius:18px; padding:26px 22px; box-shadow:0 10px 30px rgba(74,50,34,.1); border:1px solid rgba(74,50,34,.06);}
 
-  label{display:block; font-family:'Hind',sans-serif; font-size:14.5px; font-weight:600; color:var(--dark); margin:0 0 7px;}
+  label{display:flex; align-items:center; gap:7px; font-family:'Hind',sans-serif; font-size:14.5px; font-weight:600; color:var(--dark); margin:0 0 7px;}
+  label svg{width:15px; height:15px; opacity:.65; flex:none;}
   .field{margin-bottom:18px;}
+  .input-wrap{position:relative;}
   input[type=text], input[type=tel]{width:100%; padding:13px 14px; border-radius:10px; border:1.5px solid #E7DBC9;
-    font-size:15.5px; font-family:'Hind',sans-serif; color:#1c2340; background:var(--cream2);}
+    font-size:15.5px; font-family:'Hind',sans-serif; color:#1c2340; background:var(--cream2); transition:border-color .15s;}
   input:focus{outline:none; border-color:var(--gold);}
 
   .err{display:none; background:#FCE9E4; color:#B3401F; font-family:'Hind',sans-serif; font-size:13.5px;
@@ -50,8 +107,10 @@
 
   .btn-primary{width:100%; background:linear-gradient(160deg,#F7C873,#E8622C 70%,#C94A1E); color:var(--dark);
     padding:15px; border-radius:10px; font-weight:700; font-size:16px; border:none; cursor:pointer;
-    box-shadow:0 10px 24px rgba(232,98,44,.35); font-family:'Hind',sans-serif;}
+    box-shadow:0 10px 24px rgba(232,98,44,.35); font-family:'Hind',sans-serif;
+    display:flex; align-items:center; justify-content:center; gap:8px;}
   .btn-primary:active{transform:scale(.98);}
+  .btn-primary svg{width:18px; height:18px;}
 
   /* ---------- Result card (this is what gets screenshotted) ---------- */
   #resultCard{display:none;}
@@ -81,12 +140,39 @@
 
   .hint{font-family:'Hind',sans-serif; font-size:13px; color:var(--text-muted); text-align:center; margin-top:16px; line-height:1.6;}
   .again{display:block; text-align:center; margin-top:18px; font-family:'Hind',sans-serif; font-size:14px; color:var(--orange-dark); font-weight:600; cursor:pointer;}
+
+  /* ---------- How it works ---------- */
+  .steps{margin-top:34px;}
+  .steps-title{font-family:'Hind',sans-serif; font-size:13px; font-weight:700; letter-spacing:.5px; color:var(--text-muted);
+    text-transform:uppercase; text-align:center; margin:0 0 16px;}
+  .step-item{display:flex; gap:14px; align-items:flex-start; background:#fff; border-radius:14px; padding:16px;
+    box-shadow:0 6px 18px rgba(74,50,34,.08); border:1px solid rgba(74,50,34,.05); margin-bottom:12px;}
+  .step-num{flex:none; width:34px; height:34px; border-radius:10px; background:linear-gradient(160deg,var(--gold),var(--orange-dark));
+    color:#fff; font-weight:800; font-family:'Hind',sans-serif; font-size:15px; display:flex; align-items:center; justify-content:center;}
+  .step-text h3{margin:0 0 3px; font-family:'Hind',sans-serif; font-size:14.5px; font-weight:700; color:var(--dark);}
+  .step-text p{margin:0; font-family:'Hind',sans-serif; font-size:13px; color:var(--text-muted); line-height:1.5;}
+
+  .footer-note{text-align:center; margin-top:30px; font-family:'Hind',sans-serif; font-size:12px; color:var(--text-muted2); opacity:.8;}
+
+  /* ---------- Real photos ---------- */
+  .avatar-photo{width:40px; height:40px; border-radius:50%; object-fit:cover; display:block;
+    border:1.5px solid rgba(255,255,255,.4); box-shadow:0 6px 14px rgba(0,0,0,.25);}
+  .house-banner{position:relative; margin:22px 0 0; border-radius:16px; overflow:hidden; height:150px;
+    box-shadow:0 14px 30px rgba(74,50,34,.18); background:linear-gradient(160deg,var(--dark2),var(--dark3));}
+  .house-banner img{width:100%; height:100%; object-fit:cover; display:block;}
+  .house-banner .overlay{position:absolute; inset:0; background:linear-gradient(0deg, rgba(74,50,34,.75) 0%, rgba(74,50,34,.05) 55%);
+    display:flex; align-items:flex-end; padding:14px;}
+  .house-banner .overlay span{font-family:'Hind',sans-serif; color:#fff; font-size:13.5px; font-weight:600;}
 </style>
 </head>
 <body>
 
 <div class="topbar">
   <div class="brand-badge"><span class="name">Akshardham Associates</span></div>
+  <div class="topbar-hero-text">
+    <h2 class="hindi">आपके एक लिंक से किसी का घर का सपना पूरा हो सकता है</h2>
+    <p class="hindi">Smart Buyer Network · Referral Program</p>
+  </div>
 </div>
 
 <div class="page">
@@ -99,14 +185,17 @@
   <div class="card-box" id="formBox">
     <div class="err" id="errBox"></div>
     <div class="field">
-      <label class="hindi">आपका नाम</label>
+      <label class="hindi"><svg viewBox="0 0 24 24" fill="none" stroke="#4A3222" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>आपका नाम</label>
       <input type="text" id="f_name" placeholder="जैसे: Rakesh Sharma">
     </div>
     <div class="field">
-      <label class="hindi">मोबाइल नंबर</label>
+      <label class="hindi"><svg viewBox="0 0 24 24" fill="none" stroke="#4A3222" stroke-width="2"><path d="M6.6 10.8a15.2 15.2 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11 11 0 0 0 3.4.55 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11 11 0 0 0 .55 3.4 1 1 0 0 1-.25 1z"/></svg>मोबाइल नंबर</label>
       <input type="tel" id="f_phone" placeholder="10 अंकों का नंबर" maxlength="10">
     </div>
-    <button class="btn-primary hindi" id="genBtn">मेरा Link Card बनाएं</button>
+    <button class="btn-primary hindi" id="genBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#4A3222" stroke-width="2.3"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1.5-1.5"/></svg>
+      मेरा Link Card बनाएं
+    </button>
     <p class="hint">पहले से बना चुके हैं? वही नाम और नंबर डालें — बिल्कुल वही लिंक दोबारा मिल जाएगा।</p>
   </div>
 
@@ -128,6 +217,24 @@
     <p class="hint">Card को screenshot लेकर save कर लें — जब भी कोई नया योजना वीडियो स्टेटस पर डालें, उसके साथ यह screenshot भी लगा दें।</p>
     <span class="again" id="againBtn">दूसरा नाम/नंबर डालें</span>
   </div>
+
+  <div class="steps">
+    <p class="steps-title hindi">कैसे इस्तेमाल करें</p>
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-text"><h3 class="hindi">Card बनाएं</h3><p class="hindi">ऊपर अपना नाम-नंबर डालकर अपना personal link card generate करें।</p></div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-text"><h3 class="hindi">Screenshot लेकर Save करें</h3><p class="hindi">कार्ड का screenshot लेकर अपनी gallery में रख लें — दोबारा बनाने की ज़रूरत नहीं पड़ेगी।</p></div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-text"><h3 class="hindi">वीडियो के साथ Status पर लगाएं</h3><p class="hindi">जब भी कोई नया योजना वीडियो स्टेटस पर डालें, साथ में यह card भी लगा दें — आपके ज़रिए आने वाला हर लीड ट्रैक होगा।</p></div>
+    </div>
+  </div>
+
+  <div class="footer-note hindi">Akshardham Associates · Smart Buyer Network</div>
 
 </div>
 
