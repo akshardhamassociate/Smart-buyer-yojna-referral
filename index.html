@@ -196,6 +196,7 @@
   .submit-btn{width:100%; background:linear-gradient(160deg,var(--dark3),var(--dark)); color:var(--gold); border:1px solid rgba(242,169,60,.4); padding:17px;
     border-radius:11px; font-weight:700; font-size:16px; cursor:pointer; box-shadow:0 16px 30px -10px rgba(43,20,8,.5);}
   .submit-btn:disabled{opacity:.6; cursor:wait;}
+  .submit-btn.secondary{background:#fff; color:var(--dark); border:1.5px solid #E7DBC9; box-shadow:none;}
 
   .success-card{display:none; background:linear-gradient(160deg,var(--dark2),var(--dark)); border-radius:20px; padding:36px; text-align:center;
     box-shadow:0 30px 60px -20px rgba(43,20,8,.5); color:#fff;}
@@ -503,18 +504,24 @@
     </div>
 
     <div class="err-box hindi" id="formErr"></div>
-    <button type="submit" class="submit-btn hindi" id="submitBtn">Referral Link बनाएं →</button>
+    <button type="button" class="submit-btn hindi" id="submitBtn">अपनी Details Submit करें</button>
+    <button type="button" class="submit-btn secondary hindi" id="submitLinkBtn" style="margin-top:10px;">+ मेरा Referral Link भी बनाएं</button>
   </form>
 
   <div class="retrieve" id="retrieveBox">
     <h4 class="hindi">पहले से जुड़े हैं?</h4>
-    <p class="hindi">अपना नाम और मोबाइल नंबर डालें — आपका पुराना referral link वापस मिल जाएगा।</p>
+    <p class="hindi">अपना मोबाइल नंबर डालें — आपका पुराना referral link वापस मिल जाएगा।</p>
     <div class="row">
-      <input class="hindi" id="r_name" placeholder="अपना नाम">
       <input id="r_phone" inputmode="numeric" maxlength="10" placeholder="मोबाइल नंबर">
       <button type="button" id="retrieveBtn" class="hindi">लिंक पाएं</button>
     </div>
     <div class="out" id="r_out"></div>
+  </div>
+
+  <div class="success-card" id="thankyouCard" style="display:none;">
+    <div class="success-tick">✓</div>
+    <div class="success-name hindi">धन्यवाद, <span id="ty_name"></span>!</div>
+    <div class="success-sub hindi">आपकी details हमें मिल गई हैं। हमारी टीम जल्द ही आपसे संपर्क करेगी।</div>
   </div>
 
   <div class="success-card" id="successCard">
@@ -588,12 +595,11 @@
   var form = document.getElementById('sbnForm');
   var errBox = document.getElementById('formErr');
   var submitBtn = document.getElementById('submitBtn');
+  var submitLinkBtn = document.getElementById('submitLinkBtn');
   var successCard = document.getElementById('successCard');
+  var thankyouCard = document.getElementById('thankyouCard');
 
-  form.addEventListener('submit', function(e){
-    e.preventDefault();
-    errBox.style.display = 'none';
-
+  function collectAndValidate(){
     var name = document.getElementById('f_name').value.trim();
     var phone = document.getElementById('f_phone').value.trim();
     var location = document.getElementById('f_location').value.trim();
@@ -601,11 +607,13 @@
     var width = document.getElementById('f_width').value.trim();
     var length = document.getElementById('f_length').value.trim();
 
-    if (!name){ return showErr('कृपया अपना नाम भरें।'); }
-    if (!/^\d{10}$/.test(phone)){ return showErr('कृपया सही 10 अंकों का मोबाइल नंबर भरें।'); }
-    if (!location){ return showErr('कृपया प्रॉपर्टी की जगह भरें।'); }
-    if (!budget){ return showErr('कृपया प्लॉट बजट चुनें।'); }
-    if (!width || !length){ return showErr('कृपया प्लॉट साइज़ भरें।'); }
+    if (!name){ showErr('कृपया अपना नाम भरें।'); return null; }
+    if (!/^\d{10}$/.test(phone)){ showErr('कृपया सही 10 अंकों का मोबाइल नंबर भरें।'); return null; }
+    if (!location){ showErr('कृपया प्रॉपर्टी की जगह भरें।'); return null; }
+    if (!budget){ showErr('कृपया प्लॉट बजट चुनें।'); return null; }
+    if (!width || !length){ showErr('कृपया प्लॉट साइज़ भरें।'); return null; }
+
+    errBox.style.display = 'none';
 
     var data = {
       name: name,
@@ -614,6 +622,7 @@
       location: location,
       specificLocation: document.getElementById('f_specific').value.trim(),
       phone: phone,
+      mobile: phone,
       budget: budget,
       plotSize: width + ' x ' + length,
       comment: document.getElementById('f_comment').value.trim(),
@@ -623,18 +632,45 @@
       timestamp: new Date().toISOString()
     };
 
-    // Referral code = naam + mobile ke last 4 digit
+    // Referral code = naam + mobile ke last 4 digit (chahe link dikhaya jaaye ya nahi,
+    // hamesha calculate karke save karte hain taaki Sheet me record consistent rahe)
     var myCode = slugify(name) + phone.slice(-4);
     var base = window.location.href.split('?')[0];
     var myLink = base + '?ref=' + encodeURIComponent(myCode) + '&n=' + encodeURIComponent(name);
     data.myReferralCode = myCode;
     data.myReferralLink = myLink;
 
+    return data;
+  }
+
+  // Button 1 — sirf details submit, koi link nahi dikhana
+  submitBtn.addEventListener('click', function(){
+    var data = collectAndValidate();
+    if (!data) return;
+
     submitBtn.disabled = true;
+    submitLinkBtn.disabled = true;
     submitBtn.textContent = 'भेजा जा रहा है...';
 
     saveLead(data).finally(function(){
-      showSuccess(name, myLink);
+      form.style.display = 'none';
+      thankyouCard.style.display = 'block';
+      document.getElementById('ty_name').textContent = data.name;
+      thankyouCard.scrollIntoView({behavior:'smooth', block:'center'});
+    });
+  });
+
+  // Button 2 — details submit + referral link dikhana
+  submitLinkBtn.addEventListener('click', function(){
+    var data = collectAndValidate();
+    if (!data) return;
+
+    submitBtn.disabled = true;
+    submitLinkBtn.disabled = true;
+    submitLinkBtn.textContent = 'भेजा जा रहा है...';
+
+    saveLead(data).finally(function(){
+      showSuccess(data.name, data.myReferralLink);
     });
   });
 
@@ -690,22 +726,42 @@
     successCard.scrollIntoView({behavior:'smooth', block:'center'});
   }
 
-  // "पहले से जुड़े हैं?" — same formula se purana link wapas bana dete hain
+  // "पहले से जुड़े हैं?" — sirf mobile number se Sheet me record dhundh kar
+  // saved हुआ referral link wapas dikhate hain (naam ki zaroorat nahi)
   var rBtn = document.getElementById('retrieveBtn');
   if (rBtn){
     rBtn.addEventListener('click', function(){
-      var rn = document.getElementById('r_name').value.trim();
       var rp = document.getElementById('r_phone').value.trim();
       var out = document.getElementById('r_out');
       out.style.display = 'block';
-      if (!rn || !/^\d{10}$/.test(rp)){
-        out.textContent = 'कृपया अपना नाम और सही 10 अंकों का मोबाइल नंबर भरें।';
+      if (!/^\d{10}$/.test(rp)){
+        out.textContent = 'कृपया सही 10 अंकों का मोबाइल नंबर भरें।';
         return;
       }
-      var code = slugify(rn) + rp.slice(-4);
-      var lnk = window.location.href.split('?')[0] + '?ref=' + encodeURIComponent(code) + '&n=' + encodeURIComponent(rn);
-      out.innerHTML = 'आपका लिंक: <b>' + escapeHtml(lnk) + '</b>';
-      if (navigator.clipboard){ navigator.clipboard.writeText(lnk).catch(function(){}); }
+      out.textContent = 'खोजा जा रहा है...';
+      rBtn.disabled = true;
+
+      fetch(SHEET_WEBHOOK_URL, { method: 'GET' })
+        .then(function(res){ return res.json(); })
+        .then(function(json){
+          rBtn.disabled = false;
+          var leads = (json && json.leads) ? json.leads : [];
+          // sabse latest entry le lo agar ek se zyada mile
+          var match = null;
+          for (var i = leads.length - 1; i >= 0; i--){
+            if (String(leads[i].mobile || '').slice(-10) === rp){ match = leads[i]; break; }
+          }
+          if (match && match.myReferralLink){
+            out.innerHTML = 'आपका लिंक: <b>' + escapeHtml(match.myReferralLink) + '</b>';
+            if (navigator.clipboard){ navigator.clipboard.writeText(match.myReferralLink).catch(function(){}); }
+          } else {
+            out.textContent = 'इस नंबर से कोई पुराना रिकॉर्ड नहीं मिला। कृपया पहले ऊपर फॉर्म भरें।';
+          }
+        })
+        .catch(function(){
+          rBtn.disabled = false;
+          out.textContent = 'लिंक खोजने में दिक्कत आई, कृपया थोड़ी देर बाद फिर कोशिश करें।';
+        });
     });
   }
 })();
